@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket Thing1</title>
+</head>
+<body>
+    Client1
+<body class="chat">
+		<input type="text" id = "mssg"/>
+		<input type="text" id = "userid"/>
+<p id="demo"></p>
+<div id="mydiv"></div>
+</body>
+<script>
+    // Create WebSocket connection.
+    const socket = new WebSocket('ws://localhost:3000');
+	
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+        console.log('Connected to WS Server');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+	var para = document.createElement("P");
+	    serverdata=JSON.parse(event.data);
+	    keys=Object.keys(serverdata);
+	    if(keys[0]==="0"){
+		    var t=document.createTextNode(event.data);}
+	    else{
+	    
+		    var t=document.createTextNode(keys[0]+":"+serverdata[keys[0]]);}
+	    para.appendChild(t);
+	    document.getElementById("mydiv").appendChild(para);
+        console.log('Message from server ', event.data);
+    });
+	var input=document.getElementById("mssg");
+	var userid=document.getElementById("userid");
+	var datapkt={};
+	
+	userid.addEventListener("keyup",function(event){
+		if(event.keyCode===13){
+		event.preventDefault();
+		datapkt[0]=input.value;
+		datapkt[1]=userid.value;
+		console.log(datapkt);
+		var parayou = document.createElement("P");
+		//var tyou=document.createTextNode(JSON.stringify(datapkt));
+		var tyou=document.createTextNode("you:"+datapkt[1]);
+	    	parayou.appendChild(tyou);
+	    	document.getElementById("mydiv").appendChild(parayou);
+	//	document.getElementById("demo").innerHTML = JSON.stringify(datapkt);
+	//	document.getElementById("demo").innerHTML = datapkt;
+        	socket.send(JSON.stringify(datapkt));
+    //    	socket.send(datapkt);
+	}
+    });
+</script>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChattySensor</title>
+</head>
+<body>
+	<div id = "mydiv">
+		A div element
+		</div>
+</body>
+<script>
+	
+	
+	// Create WebSocket connection.
+
+    const socket = new WebSocket('ws://localhost:3000');
+
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+        console.log('Connected to WS Server')
+	    var idmssg={};
+	    idmssg[0]='chat';
+	    idmssg[1]="0";
+
+        socket.send(JSON.stringify(idmssg));
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+	    keys=[];
+        console.log("predata:",keys);
+        console.log('Message from server ', event.data);
+	var serverdata=JSON.parse(event.data);    
+	keys=Object.keys(serverdata);
+        console.log("postdata:",keys);
+	//var serverdata=event.data;    
+	var para = document.createElement("P");
+	if(keys[0]==="0"){
+		console.log("ifpass,keys(0):",keys[0]);
+		var t=document.createTextNode(event.data);}
+	    else{
+		console.log("elsepass,keys(0):",keys[0]);
+		var t=document.createTextNode(keys[0]+":"+serverdata[keys[0]]);}
+	    para.appendChild(t);
+	    document.getElementById("mydiv").appendChild(para);
+    });
+
+    const sendMessage = () => {
+        socket.send('chat');
+    }
+</script>
+</html>
