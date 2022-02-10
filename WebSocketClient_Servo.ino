@@ -104,7 +104,7 @@ void setup() {
 	// USE_SERIAL.begin(921600);
 	USE_SERIAL.begin(115200);
 
- myservo.attach(D2);
+ myservo.attach(D2,500,2400);
 
 	//Serial.setDebugOutput(true);
 	USE_SERIAL.setDebugOutput(true);
@@ -119,7 +119,8 @@ void setup() {
 		delay(1000);
 	}
 
-  WiFiMulti.addAP("SSID", "PASS");
+	WiFiMulti.addAP(SSID,PASS);
+  //WiFiMulti.addAP(process.env.SSID, process.env.PASS);
 
 	//WiFi.disconnect();
 	while(WiFiMulti.run() != WL_CONNECTED) {
@@ -169,6 +170,8 @@ void loop() {
   for (pos = 0; pos <= ang; pos += 1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    Serial.print("\n");
+    Serial.print(myservo.readMicroseconds());
     delay(15);                       // waits 15ms for the servo to reach the position
   }
   for (pos = ang; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
